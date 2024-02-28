@@ -5,6 +5,7 @@ import 'package:gritstone_task/controller/home%20bloc/home_bloc.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/view/home/home.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:alarm/alarm.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +13,7 @@ void main() async{
   Hive.registerAdapter(AlarmModelAdapter());
   Hive.registerAdapter(TimeOfDayAdapter());
   await Hive.openBox<AlarmModel>('alarms');
+  await Alarm.init();
   runApp(const MyApp());
 }
 

@@ -5,8 +5,8 @@ import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/home/home.dart';
 
-class AlarmSettings extends StatelessWidget {
-  AlarmSettings({Key? key}) : super(key: key);
+class AlarmSettingsScreen extends StatelessWidget {
+  AlarmSettingsScreen({Key? key}) : super(key: key);
   TimeOfDay time = TimeOfDay.now();
   final TextEditingController labelController = TextEditingController();
 
@@ -104,6 +104,7 @@ class AlarmSettings extends StatelessWidget {
                 AlarmModel alarmDetails = AlarmModel(
                     label: labelController.text.trim() ?? 'alarm', time: time);
                 alarmService.saveAlarm(alarmDetails);
+                
                 // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
                 //     alarmDetails: alarmDetails));
                 Navigator.of(context).pushAndRemoveUntil(
