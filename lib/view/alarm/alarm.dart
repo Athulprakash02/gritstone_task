@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
+import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
 
 class AlarmSettings extends StatelessWidget {
-  const AlarmSettings({Key? key}) : super(key: key);
+  AlarmSettings({Key? key}) : super(key: key);
+  TimeOfDay time = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
+    final AlarmService alarmService = AlarmService();
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -47,27 +52,34 @@ class AlarmSettings extends StatelessWidget {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 1), 
+                    offset: Offset(0, 1),
                   ),
                 ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '3:45 AM',
-                    style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                    ),
+                  BlocBuilder<AlarmBloc, AlarmState>(
+                    builder: (context, state) {
+                      String hour = state.selectedTime.format(context);
+                      return Text(
+                        hour,
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
                   ),
                   IconButton(
                     icon: Icon(
                       Icons.edit,
                       color: Colors.white,
                     ),
-                    onPressed: () {
-                     
+                    onPressed: () async {
+                      time = await alarmService.setAlarm(context);
+                      BlocProvider.of<AlarmBloc>(context)
+                          .add(EditTimeEvent(selectedTime: time));
                     },
                   ),
                 ],
@@ -76,7 +88,7 @@ class AlarmSettings extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                print('Saved');
+                print(time);
               },
               child: Text('Save Alarm'),
             ),
