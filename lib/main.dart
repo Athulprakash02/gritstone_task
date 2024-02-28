@@ -10,6 +10,7 @@ void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(AlarmModelAdapter());
+  Hive.registerAdapter(TimeOfDayAdapter());
   await Hive.openBox<AlarmModel>('alarms');
   runApp(const MyApp());
 }

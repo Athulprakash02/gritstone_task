@@ -28,7 +28,7 @@ class AlarmService {
   getAlarms() {
     print('vann');
     final alarmsDb = Hive.box<AlarmModel>('alarms');
-    // savedAlarms.clear();
+    savedAlarms.clear();
     savedAlarms.addAll(alarmsDb.values);
   }
 }
