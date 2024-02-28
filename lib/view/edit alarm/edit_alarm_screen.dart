@@ -5,17 +5,22 @@ import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/home/home.dart';
 
-class AlarmSettings extends StatelessWidget {
-  AlarmSettings({Key? key}) : super(key: key);
-  TimeOfDay time = TimeOfDay.now();
-  final TextEditingController labelController = TextEditingController();
+class AlarmEditScreen extends StatelessWidget {
+  final AlarmModel alarm;
+  final int index;
+
+  const AlarmEditScreen({Key? key, required this.alarm, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController labelController =
+        TextEditingController(text: alarm.label);
+    TimeOfDay time = alarm.time;
     final AlarmService alarmService = AlarmService();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: Text('Edit Alarm'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -64,9 +69,9 @@ class AlarmSettings extends StatelessWidget {
                 children: [
                   BlocBuilder<AlarmBloc, AlarmState>(
                     builder: (context, state) {
-                      String hour = state.selectedTime.format(context);
+                      
                       return Text(
-                        hour,
+                        time.format(context),
                         style: TextStyle(
                           fontSize: 22,
                           color: Colors.white,
@@ -80,7 +85,7 @@ class AlarmSettings extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      time = await alarmService.setTime(context,TimeOfDay.now());
+                      time = await alarmService.setTime(context, alarm.time);
                       BlocProvider.of<AlarmBloc>(context)
                           .add(EditTimeEvent(selectedTime: time));
                     },
@@ -101,18 +106,19 @@ class AlarmSettings extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                AlarmModel alarmDetails = AlarmModel(
-                    label: labelController.text.trim() ?? 'alarm', time: time);
-                alarmService.saveAlarm(alarmDetails);
-                // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
-                //     alarmDetails: alarmDetails));
+                final updatedAlarm = AlarmModel(
+                   
+                    label: labelController.text.trim() ?? 'alarm',
+                    time: time);
+                alarmService.updateAlarm(index, updatedAlarm);
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                    (route) => false);
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
+                  ),
+                  (route) => false,
+                );
               },
-              child: Text('Save Alarm'),
+              child: Text('Save Changes'),
             ),
           ],
         ),
