@@ -64,7 +64,10 @@ class AlarmSettings extends StatelessWidget {
                 children: [
                   BlocBuilder<AlarmBloc, AlarmState>(
                     builder: (context, state) {
-                      String hour = state.selectedTime.format(context);
+                      String hour = TimeOfDay.now().format(context);
+                      if (state is TimeSelectedState) {
+                        hour = state.selectedTime.format(context);
+                      }
                       return Text(
                         hour,
                         style: TextStyle(
@@ -100,12 +103,12 @@ class AlarmSettings extends StatelessWidget {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async{
                 AlarmModel alarmDetails = AlarmModel(
                     label: labelController.text.trim() ?? 'alarm', time: time);
-                alarmService.saveAlarm(alarmDetails);
-                // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
-                //     alarmDetails: alarmDetails));
+               await alarmService.saveAlarm(alarmDetails);
+                BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
+                    alarmDetails: alarmDetails));
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => HomeScreen(),

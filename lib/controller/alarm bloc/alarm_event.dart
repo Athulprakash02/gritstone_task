@@ -15,3 +15,8 @@ class SaveAlarmEvent extends AlarmEvent {
 
   SaveAlarmEvent({required this.alarmDetails});
 }
+
+class getAlarmEvent extends AlarmEvent {
+  
+  
+}

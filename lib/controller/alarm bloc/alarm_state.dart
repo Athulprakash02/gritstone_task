@@ -1,17 +1,19 @@
 part of 'alarm_bloc.dart';
 
-@immutable
  class AlarmState {
-  final TimeOfDay selectedTime;
-  // final List<AlarmModel> alarmList;
+  // final TimeOfDay selectedTime;
+  final List<AlarmModel> alarmList;
 
-  AlarmState({required this.selectedTime, });
+  AlarmState({required this.alarmList, });
 }
 
 final class AlarmInitial extends AlarmState {
-  AlarmInitial({required super.selectedTime, });
+  AlarmInitial({required super.alarmList, });
 }
 
 class TimeSelectedState extends AlarmState {
-  TimeSelectedState({required super.selectedTime, });
+  final TimeOfDay selectedTime;
+
+  TimeSelectedState({required super.alarmList, required this.selectedTime});
+  
 }

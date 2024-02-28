@@ -9,16 +9,12 @@ part 'alarm_event.dart';
 part 'alarm_state.dart';
 
 class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
-  AlarmBloc()
-      : super(AlarmInitial(
-          selectedTime: TimeOfDay.now(),
-        )) {
+  AlarmBloc() : super(AlarmInitial(alarmList: savedAlarms)) {
     on<EditTimeEvent>((event, emit) {
       print('object');
       print(event.selectedTime);
       return emit(TimeSelectedState(
-        selectedTime: event.selectedTime,
-      ));
+          selectedTime: event.selectedTime, alarmList: savedAlarms));
     });
 
     on<SaveAlarmEvent>(
@@ -27,7 +23,15 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
         // alarmDb.add(event.alarmDetails);
         // print(alarmDb.length);
         savedAlarms.add(event.alarmDetails);
+        return emit(AlarmState(alarmList: savedAlarms));
       },
     );
+
+    on<getAlarmEvent>((event, emit) {
+      final alarmDb = Hive.box<AlarmModel>('alarms');
+      // savedAlarms.clear();
+      savedAlarms.addAll(alarmDb.values);
+      return emit(AlarmState(alarmList: savedAlarms));
+    });
   }
 }

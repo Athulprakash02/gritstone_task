@@ -19,16 +19,18 @@ class AlarmService {
     return TimeOfDay.now();
   }
 
-  saveAlarm(AlarmModel alarmDetails) {
+  saveAlarm(AlarmModel alarmDetails) async{
+    print('save alarm keri');
     final alarmBox = Hive.box<AlarmModel>('alarms');
-    alarmBox.add(alarmDetails);
+   await alarmBox.add(alarmDetails);
+    print(alarmBox.length);
     // getAlarms();
   }
 
   getAlarms() {
     print('vann');
     final alarmsDb = Hive.box<AlarmModel>('alarms');
-    // savedAlarms.clear();
+    savedAlarms.clear();
     savedAlarms.addAll(alarmsDb.values);
   }
 }

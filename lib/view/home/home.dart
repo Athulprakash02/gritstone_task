@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
-import 'package:gritstone_task/controller/home%20bloc/home_bloc.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/alarm/alarm.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final AlarmService alarmService = AlarmService();
 
   @override
   Widget build(BuildContext context) {
-    // BlocProvider.of<HomeBloc>(context).add(HomeInitialEvent());
+    
+
      alarmService.getAlarms();
     Size size = MediaQuery.sizeOf(context);
-    return BlocBuilder<HomeBloc, HomeState>(
+    return BlocBuilder<AlarmBloc, AlarmState>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
