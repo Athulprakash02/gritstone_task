@@ -38,7 +38,7 @@ DateTime time = convertTimeOfDayToDateTime(alarmDetails.time);
                   notificationBody: TimeOfDay.now().toString(),
                   enableNotificationOnKill: true,
                 );
-// await alarmManager.addAlarm(alarmTime);
+// await AlarmManager.addAlarm(alarmTime);
                 await Alarm.set(alarmSettings: alarmSettings);
     // getAlarms();
   }
