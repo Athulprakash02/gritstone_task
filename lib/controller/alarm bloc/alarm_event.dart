@@ -8,3 +8,10 @@ class EditTimeEvent extends AlarmEvent{
 
   EditTimeEvent({required this.selectedTime});
 }
+
+class SaveAlarmEvent extends AlarmEvent {
+  // final TimeOfDay selectedTime;
+  final AlarmModel alarmDetails;
+
+  SaveAlarmEvent({required this.alarmDetails});
+}

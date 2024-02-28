@@ -1,6 +1,14 @@
 part of 'home_bloc.dart';
 
 @immutable
-sealed class HomeState {}
+sealed class HomeState {
+  final List<AlarmModel> alarmList;
 
-final class HomeInitial extends HomeState {}
+  const HomeState({required this.alarmList});
+}
+
+final class HomeInitial extends HomeState {
+  const HomeInitial({required super.alarmList});
+}
+
+

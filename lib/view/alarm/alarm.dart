@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
+import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/view/home/home.dart';
 
 class AlarmSettings extends StatelessWidget {
   AlarmSettings({Key? key}) : super(key: key);
   TimeOfDay time = TimeOfDay.now();
+  final TextEditingController labelController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +80,7 @@ class AlarmSettings extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      time = await alarmService.setAlarm(context);
+                      time = await alarmService.setTime(context);
                       BlocProvider.of<AlarmBloc>(context)
                           .add(EditTimeEvent(selectedTime: time));
                     },
@@ -86,9 +89,28 @@ class AlarmSettings extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20),
+            TextField(
+              controller: labelController,
+              decoration: InputDecoration(
+                labelText: 'Label',
+                hintText: 'Wake up',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              ),
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                print(time);
+                AlarmModel alarmDetails = AlarmModel(
+                    label: labelController.text.trim() ?? 'alarm', time: time);
+                alarmService.saveAlarm(alarmDetails);
+                // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
+                //     alarmDetails: alarmDetails));
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ),
+                    (route) => false);
               },
               child: Text('Save Alarm'),
             ),
