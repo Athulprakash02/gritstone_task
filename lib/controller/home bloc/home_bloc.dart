@@ -9,11 +9,12 @@ part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial(alarmList: savedAlarms)) {
+    
     on<HomeInitialEvent>((event, emit) {
       final alarmDb = Hive.box<AlarmModel>('alarms');
-      savedAlarms.clear();
+      // savedAlarms.clear();
       savedAlarms.addAll(alarmDb.values);
-      return emit(HomeInitial(alarmList: savedAlarms));
+      return emit(HomeLoadedState(alarmList: savedAlarms));
     });
   }
 }

@@ -12,37 +12,57 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // alarmService.getAlarms();
+    // BlocProvider.of<HomeBloc>(context).add(HomeInitialEvent());
+     alarmService.getAlarms();
     Size size = MediaQuery.sizeOf(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Alarm'),
-        centerTitle: true,
-      ),
-      body: BlocBuilder<HomeBloc, HomeState>(
-        builder: (context, state) {
-          return SizedBox(
-            width: size.width,
-            height: size.height,
-            child: ListView.builder(
-                itemCount: state.alarmList.length,
-                itemBuilder: (context, index) {
-                  AlarmModel alarm = state.alarmList[index];
-                  return ListTile(
-                    title: Text(alarm.label),
-                  );
-                }),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AlarmSettings(),
-          ));
-        },
-        child: Icon(Icons.add),
-      ),
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Alarm'),
+            centerTitle: true,
+          ),
+          body:  SizedBox(
+                width: size.width,
+                height: size.height,
+                child: ListView.builder(
+                    itemCount: state.alarmList.length,
+                    itemBuilder: (context, index) {
+                      AlarmModel alarm = state.alarmList[index];
+                      return ListTile(
+                        title: Text(alarm.time.format(context)),
+                        subtitle: Text( alarm.label),
+                        trailing: Wrap(
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                 
+                                },
+                                icon: const Icon(Icons.edit),
+                                color: Colors.blue),
+                            IconButton(
+                              onPressed: () {
+                                // deleteAlert(context, index);
+                              },
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+           
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AlarmSettings(),
+              ));
+            },
+            child: Icon(Icons.add),
+          ),
+        );
+      },
     );
   }
 }

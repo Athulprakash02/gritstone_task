@@ -11,4 +11,9 @@ final class HomeInitial extends HomeState {
   const HomeInitial({required super.alarmList});
 }
 
+class HomeLoadedState extends HomeState {
+  HomeLoadedState({required super.alarmList});
+  
+}
+
 

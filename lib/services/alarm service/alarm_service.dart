@@ -22,13 +22,13 @@ class AlarmService {
   saveAlarm(AlarmModel alarmDetails) {
     final alarmBox = Hive.box<AlarmModel>('alarms');
     alarmBox.add(alarmDetails);
-    getAlarms();
+    // getAlarms();
   }
 
   getAlarms() {
     print('vann');
     final alarmsDb = Hive.box<AlarmModel>('alarms');
-    savedAlarms.clear();
+    // savedAlarms.clear();
     savedAlarms.addAll(alarmsDb.values);
   }
 }
