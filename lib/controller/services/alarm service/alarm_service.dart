@@ -31,9 +31,8 @@ class AlarmService {
       assetAudioPath: 'assets/alarm.mp3',
       loopAudio: false,
       vibrate: true,
-      
       volume: 0.8,
-      fadeDuration: 0.0,
+      fadeDuration: 3.0,
       notificationTitle: alarmDetails.label,
       notificationBody: '',
       enableNotificationOnKill: true,

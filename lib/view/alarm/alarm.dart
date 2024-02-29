@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
 import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/view/alarm/widgets/label_feild_widget.dart';
-import 'package:gritstone_task/view/alarm/widgets/save_alarm_button_widget.dart';
+import 'package:gritstone_task/view/home/home.dart';
 
 class AlarmSettingsScreen extends StatelessWidget {
   // ignore: use_super_parameters
@@ -116,7 +117,22 @@ class AlarmSettingsScreen extends StatelessWidget {
               const SizedBox(height: 20),
               LabelFeild(labelController: labelController),
               const SizedBox(height: 20),
-              SaveAlarmButton(labelController: labelController, time: time, alarmService: alarmService),
+              ElevatedButton(
+      onPressed: () {
+        AlarmModel alarmDetails = AlarmModel(
+            label: labelController.text.trim(), time: time);
+        alarmService.saveAlarm(alarmDetails);
+            
+        // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
+        //     alarmDetails: alarmDetails));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(),
+            ),
+            (route) => false);
+      },
+      child: const Text('Save Alarm'),
+    ),
             ],
           ),
         ),

@@ -19,30 +19,22 @@ class AlarmManager {
             android: AndroidInitializationSettings('@mipmap/ic_launcher')),
         onDidReceiveBackgroundNotificationResponse:
             (NotificationResponse payload) async {
-      // Handle notification tap
-      // Extract alarm id from payload
-      final int alarmId = int.parse(payload.payload!);
-      // Cancel the alarm
-      await cancelAlarm(alarmId);
-        }, onDidReceiveNotificationResponse: (NotificationResponse payload) async {
-      // Handle notification tap
-      // Extract alarm id from payload
-      final int alarmId = int.parse(payload.payload!);
-      // Cancel the alarm
-      await cancelAlarm(alarmId);
-        });
+      await cancelAlarm(1);
+    }, onDidReceiveNotificationResponse: (NotificationResponse payload) async {
+      await cancelAlarm(1);
+    });
 
     tz.initializeTimeZones();
   }
 
   static Future<void> addAlarm(AlarmModel alarm) async {
-    // Fetch location permission
+
     final PermissionStatus status = await Permission.location.request();
 
-    // Check if permission is granted
+  
     if (status.isGranted) {
       try {
-        // Fetch device's location
+      //current Location Fetching
         final Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
 
@@ -77,15 +69,15 @@ class AlarmManager {
             icon: '@mipmap/ic_launcher',
             timeoutAfter: 1000,
             sound: RawResourceAndroidNotificationSound('alarm_sound'),
-            // importance: Importance.max,
-            // priority: Priority.high,
+            importance: Importance.max,
+            priority: Priority.high,
           );
 
           const NotificationDetails platformChannelSpecifics =
               NotificationDetails(android: androidPlatformChannelSpecifics);
 
           await _flutterLocalNotificationsPlugin.zonedSchedule(
-            alarm.id ?? 1,
+             1,
             'title',
             'body',
             tzDateTime,
@@ -99,13 +91,16 @@ class AlarmManager {
         // ignore: empty_catches
       } catch (e) {}
     } else {
-      
+      // Handle the case where permission is denied
+      // You can show a message to the user explaining why location is needed and prompt them to revisit permissions settings if necessary.
     }
   }
 
-  
+  static Future cancel(int id) async {
+    await _flutterLocalNotificationsPlugin.cancel(id);
+  }
 
-
+  // close all the notifications available
   static Future<void> cancelAlarm(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
@@ -117,6 +112,4 @@ class AlarmManager {
       await addAlarm(alarm);
     }
   }
-
-
 }
