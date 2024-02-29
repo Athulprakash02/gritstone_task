@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
-import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/home/home.dart';
 
 class AlarmEditScreen extends StatelessWidget {

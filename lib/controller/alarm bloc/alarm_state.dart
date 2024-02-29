@@ -15,3 +15,9 @@ final class AlarmInitial extends AlarmState {
 class TimeSelectedState extends AlarmState {
   TimeSelectedState({required super.selectedTime, });
 }
+
+class WeatherFetchState extends AlarmState{
+  final Map<String,dynamic> weatherReport;
+  WeatherFetchState(this.weatherReport, {required super.selectedTime});
+
+}

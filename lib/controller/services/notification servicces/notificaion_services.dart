@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
-import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,9 +14,7 @@ class AlarmManager {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    // final InitializationSettings initializationSettings =
-    //     InitializationSettings(
-    //         android: AndroidInitializationSettings('@mipmap/ic_launcher'));
+
             
     await _flutterLocalNotificationsPlugin.initialize(InitializationSettings(
             android: AndroidInitializationSettings('@mipmap/ic_launcher')),onDidReceiveBackgroundNotificationResponse: (details) async{
@@ -65,7 +63,7 @@ class AlarmManager {
             actions: [AndroidNotificationAction('cancel_id', 'cancel',cancelNotification: true,)],
             channelDescription: 'Notification channel',
             icon: '@mipmap/ic_launcher',
-            timeoutAfter: 1,
+            timeoutAfter: 1000,
             sound: RawResourceAndroidNotificationSound('alarm_sound'),
             importance: Importance.max,
             priority: Priority.high,

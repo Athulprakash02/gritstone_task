@@ -38,7 +38,7 @@ class AlarmService {
       fadeDuration: 3.0,
       notificationTitle: alarmDetails.label,
       notificationBody: TimeOfDay.now().toString(),
-      enableNotificationOnKill: true,
+      enableNotificationOnKill: false,
     );
     await AlarmManager.addAlarm(alarmDetails);
     await Alarm.set(alarmSettings: alarmSettings);

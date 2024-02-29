@@ -15,3 +15,10 @@ class SaveAlarmEvent extends AlarmEvent {
 
   SaveAlarmEvent({required this.alarmDetails});
 }
+
+class FetchWeatherEvent extends AlarmEvent {
+ 
+
+
+  
+}

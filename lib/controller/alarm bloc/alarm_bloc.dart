@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:gritstone_task/controller/services/weather%20service/weather_service.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
-import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
 import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 
@@ -29,5 +30,11 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
         savedAlarms.add(event.alarmDetails);
       },
     );
+
+    on<FetchWeatherEvent>((event, emit) async {
+      final WeatherService weatherService = WeatherService();
+      Map<String, dynamic> report = await weatherService.fetchWeatherData();
+      return emit(WeatherFetchState(report, selectedTime: state.selectedTime));
+    });
   }
 }

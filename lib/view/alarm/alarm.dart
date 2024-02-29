@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
+import 'package:gritstone_task/controller/services/weather%20service/weather_service.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
-import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/home/home.dart';
 
 class AlarmSettingsScreen extends StatelessWidget {
@@ -13,6 +14,9 @@ class AlarmSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AlarmService alarmService = AlarmService();
+
+    // final WeatherService weatherService = WeatherService();
+    // weatherService.fetchWeatherData();
     return Scaffold(
       appBar: AppBar(
         title: Text('Settings'),
@@ -22,27 +26,44 @@ class AlarmSettingsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ListTile(
-              title: Text(
-                'Placename',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                'Cloudy, 34°C / 34°C',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              trailing: Text(
-                '30°C',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            BlocBuilder<AlarmBloc, AlarmState>(
+              builder: (context, state) {
+                if (state is WeatherFetchState) {
+                  return ListTile(
+                    title: Text(
+                      state.weatherReport["location"]['name'],
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      state.weatherReport["current"]["condition"]["text"],
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    trailing: Text(
+                      '${state.weatherReport['current']["temp_c"].toInt()}°C',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                } else {
+                  return ListTile(
+                    title: Text(
+                      'Loading...',
+                      style: TextStyle(
+                        fontSize: 14,
+                        
+                      ),
+                    ),
+                    
+                  );
+                }
+              },
             ),
             SizedBox(height: 20),
             Container(
@@ -80,9 +101,12 @@ class AlarmSettingsScreen extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      time = await alarmService.setTime(context,TimeOfDay.now());
+                      time =
+                          await alarmService.setTime(context, TimeOfDay.now());
                       BlocProvider.of<AlarmBloc>(context)
                           .add(EditTimeEvent(selectedTime: time));
+                      BlocProvider.of<AlarmBloc>(context)
+                          .add(FetchWeatherEvent());
                     },
                   ),
                 ],
@@ -104,7 +128,7 @@ class AlarmSettingsScreen extends StatelessWidget {
                 AlarmModel alarmDetails = AlarmModel(
                     label: labelController.text.trim() ?? 'alarm', time: time);
                 alarmService.saveAlarm(alarmDetails);
-                
+
                 // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
                 //     alarmDetails: alarmDetails));
                 Navigator.of(context).pushAndRemoveUntil(

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
 import 'package:gritstone_task/controller/home%20bloc/home_bloc.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
-import 'package:gritstone_task/services/alarm%20service/alarm_service.dart';
+import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/alarm/alarm.dart';
 import 'package:gritstone_task/view/edit%20alarm/edit_alarm_screen.dart';
 
@@ -58,6 +58,7 @@ class HomeScreen extends StatelessWidget {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
+              BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => AlarmSettingsScreen(),
               ));
@@ -78,6 +79,7 @@ class HomeScreen extends StatelessWidget {
           TextButton(
               onPressed: () {
                 alarmService.deleteAlarm(key, context);
+                
 
                 Navigator.of(context).pop(ctx);
               },
