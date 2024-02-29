@@ -23,8 +23,7 @@ class AlarmManager {
     }, onDidReceiveNotificationResponse: (NotificationResponse payload) async {
       await cancelAlarm(1);
     });
-    await Permission.location.request();
-    await Permission.notification.request();
+    
     tz.initializeTimeZones();
   }
 

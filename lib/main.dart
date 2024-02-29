@@ -6,6 +6,7 @@ import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/view/home/home.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:alarm/alarm.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 
 void main() async {
@@ -14,6 +15,8 @@ void main() async {
   Hive.registerAdapter(AlarmModelAdapter());
   Hive.registerAdapter(TimeOfDayAdapter());
   tzdata.initializeTimeZones();
+  await Permission.location.request();
+    await Permission.notification.request();
   await Hive.openBox<AlarmModel>('alarms');
   await Alarm.init();
   runApp(const MyApp());
