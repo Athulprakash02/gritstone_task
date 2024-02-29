@@ -29,16 +29,18 @@ class AlarmService {
       id: alarmDetails.id ??= 1,
       dateTime: time,
       assetAudioPath: 'assets/alarm.mp3',
-      loopAudio: true,
+      loopAudio: false,
       vibrate: true,
+      
       volume: 0.8,
-      fadeDuration: 3.0,
+      fadeDuration: 0.0,
       notificationTitle: alarmDetails.label,
-      notificationBody: TimeOfDay.now().toString(),
-      enableNotificationOnKill: false,
+      notificationBody: '',
+      enableNotificationOnKill: true,
     );
     await AlarmManager.addAlarm(alarmDetails);
     await Alarm.set(alarmSettings: alarmSettings);
+    
     // getAlarms();
   }
 

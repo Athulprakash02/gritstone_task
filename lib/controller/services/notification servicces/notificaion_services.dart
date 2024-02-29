@@ -15,16 +15,22 @@ class AlarmManager {
 
   static Future<void> initialize() async {
     await _flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher')),
-      onDidReceiveBackgroundNotificationResponse: (details) async {
-        _onSelectNotification(details.payload);
-        if (details.actionId == 'cancel_id') {
-          _onSelectNotification(details.payload);
-          // await _flutterLocalNotificationsPlugin.cancel();
-        }
-      },
-    );
+        const InitializationSettings(
+            android: AndroidInitializationSettings('@mipmap/ic_launcher')),
+        onDidReceiveBackgroundNotificationResponse:
+            (NotificationResponse payload) async {
+      // Handle notification tap
+      // Extract alarm id from payload
+      final int alarmId = int.parse(payload.payload!);
+      // Cancel the alarm
+      await cancelAlarm(alarmId);
+        }, onDidReceiveNotificationResponse: (NotificationResponse payload) async {
+      // Handle notification tap
+      // Extract alarm id from payload
+      final int alarmId = int.parse(payload.payload!);
+      // Cancel the alarm
+      await cancelAlarm(alarmId);
+        });
 
     tz.initializeTimeZones();
   }
@@ -71,15 +77,15 @@ class AlarmManager {
             icon: '@mipmap/ic_launcher',
             timeoutAfter: 1000,
             sound: RawResourceAndroidNotificationSound('alarm_sound'),
-            importance: Importance.max,
-            priority: Priority.high,
+            // importance: Importance.max,
+            // priority: Priority.high,
           );
 
           const NotificationDetails platformChannelSpecifics =
               NotificationDetails(android: androidPlatformChannelSpecifics);
 
           await _flutterLocalNotificationsPlugin.zonedSchedule(
-            2,
+            alarm.id ?? 1,
             'title',
             'body',
             tzDateTime,
@@ -87,22 +93,19 @@ class AlarmManager {
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime,
-            payload: 'payload',
+            payload: alarm.id.toString(),
           );
         }
         // ignore: empty_catches
       } catch (e) {}
     } else {
-      // Handle the case where permission is denied
-      // You can show a message to the user explaining why location is needed and prompt them to revisit permissions settings if necessary.
+      
     }
   }
 
-  static Future cancel(int id) async {
-    await _flutterLocalNotificationsPlugin.cancel(id);
-  }
+  
 
-  // close all the notifications available
+
   static Future<void> cancelAlarm(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
@@ -115,11 +118,5 @@ class AlarmManager {
     }
   }
 
-  // Callback function invoked when a notification is selected by the user
-  static Future<void> _onSelectNotification(String? payload) async {
-    cancelAlarm(1);
-    // Handle notification selection event here
-  }
 
-  // Callback function invoked when a notification is canceled by the user
 }

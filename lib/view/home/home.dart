@@ -23,48 +23,57 @@ class HomeScreen extends StatelessWidget {
             title: const Text('Alarm'),
             centerTitle: true,
           ),
-          body: SizedBox(
-            width: size.width,
-            height: size.height,
-            child: ListView.builder(
-                itemCount: state.alarmList.length,
-                itemBuilder: (context, index) {
-                  AlarmModel alarm = state.alarmList[index];
-                  return ListTile(
-                    title: Text(alarm.time.format(context)),
-                    subtitle: Text(alarm.label),
-                    trailing: Wrap(
-                      children: [
-                        IconButton(
+          body: SafeArea(
+            child: SizedBox(
+              width: size.width,
+              height: size.height,
+              child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                  itemCount: state.alarmList.length,
+                  itemBuilder: (context, index) {
+                    AlarmModel alarm = state.alarmList[index];
+                    return ListTile(
+                      
+                      title: Text(alarm.time.format(context)),
+                      subtitle: Text(alarm.label),
+                      trailing: Wrap(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      AlarmEditScreen(alarm: alarm,index: index,),
+                                ));
+                              },
+                              icon: const Icon(Icons.edit),
+                              color: Colors.blue),
+                          IconButton(
                             onPressed: () {
-                              BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    AlarmEditScreen(alarm: alarm,index: index,),
-                              ));
+                              deleteAlert(context, index);
                             },
-                            icon: const Icon(Icons.edit),
-                            color: Colors.blue),
-                        IconButton(
-                          onPressed: () {
-                            deleteAlert(context, index);
-                          },
-                          icon: const Icon(Icons.delete),
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                  );
-                }),
+                            icon: const Icon(Icons.delete),
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+            ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async{
-              BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AlarmSettingsScreen(),
-              ));
-            },
-            child: const Icon(Icons.add),
+          floatingActionButton: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FloatingActionButton(
+                onPressed: () async{
+                  BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => AlarmSettingsScreen(),
+                  ));
+                },
+                child: const Icon(Icons.add),
+              ),
+            ],
           ),
         );
       },

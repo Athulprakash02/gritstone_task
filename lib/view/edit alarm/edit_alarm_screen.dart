@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
-import 'package:gritstone_task/view/home/home.dart';
+import 'package:gritstone_task/view/edit%20alarm/widgets/label_text_feild_widget.dart';
+import 'package:gritstone_task/view/edit%20alarm/widgets/update_button_widget.dart';
 
 class AlarmEditScreen extends StatelessWidget {
   final AlarmModel alarm;
@@ -111,33 +112,14 @@ class AlarmEditScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: labelController,
-              decoration: InputDecoration(
-                labelText: 'Label',
-                hintText: 'Wake up',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              ),
-            ),
+            LabelTextFeildWidget(labelController: labelController),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                final updatedAlarm =
-                    AlarmModel(label: labelController.text.trim(), time: time);
-                alarmService.updateAlarm(index, updatedAlarm);
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                  (route) => false,
-                );
-              },
-              child: const Text('Save Changes'),
-            ),
+            UpdateButtonWidget(labelController: labelController, time: time, alarmService: alarmService, index: index),
           ],
         ),
       ),
     );
   }
 }
+
+
