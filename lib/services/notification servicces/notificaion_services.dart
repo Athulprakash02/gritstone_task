@@ -14,12 +14,20 @@ class AlarmManager {
       FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: AndroidInitializationSettings('@mipmap/ic_launcher'));
-    await _flutterLocalNotificationsPlugin.initialize(initializationSettings,onDidReceiveNotificationResponse: (details) => cancelAlarm,onDidReceiveBackgroundNotificationResponse: (details) => cancelAlarm,);
+    // final InitializationSettings initializationSettings =
+    //     InitializationSettings(
+    //         android: AndroidInitializationSettings('@mipmap/ic_launcher'));
+            
+    await _flutterLocalNotificationsPlugin.initialize(InitializationSettings(
+            android: AndroidInitializationSettings('@mipmap/ic_launcher')),onDidReceiveBackgroundNotificationResponse: (details) async{
+              if(details.actionId == 'cancel_id'){
+                // await _flutterLocalNotificationsPlugin.cancel();
+                print(details.id);
+              }
+              
+            },);
 
-    // Initialize the timezone database
+    
     tz.initializeTimeZones();
   }
 
@@ -54,8 +62,10 @@ class AlarmManager {
               AndroidNotificationDetails(
             'Alarm_channel',
             'alarm',
+            actions: [AndroidNotificationAction('cancel_id', 'cancel',cancelNotification: true,)],
             channelDescription: 'Notification channel',
             icon: '@mipmap/ic_launcher',
+            timeoutAfter: 1,
             sound: RawResourceAndroidNotificationSound('alarm_sound'),
             importance: Importance.max,
             priority: Priority.high,
@@ -70,6 +80,7 @@ class AlarmManager {
             'body',
             tzDateTime,
             platformChannelSpecifics,
+            
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime,
@@ -114,5 +125,7 @@ class AlarmManager {
       await cancelAlarm(id!);
     }
   }
+
+  
 
 }
