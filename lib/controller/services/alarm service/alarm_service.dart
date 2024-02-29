@@ -31,10 +31,10 @@ class AlarmService {
       assetAudioPath: 'assets/alarm.mp3',
       loopAudio: false,
       vibrate: true,
-      volume: 0.8,
+      volume: 0.2,
       fadeDuration: 3.0,
       notificationTitle: alarmDetails.label,
-      notificationBody: '',
+      notificationBody: 'Alarm will stop automatically!',
       enableNotificationOnKill: true,
     );
     await AlarmManager.addAlarm(alarmDetails);

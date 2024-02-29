@@ -34,26 +34,27 @@ class AlarmManager {
   
     if (status.isGranted) {
       try {
-      //current Location Fetching
         final Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
 
-        // Fetch placemarks
+        
         final List<Placemark> placemarks = await placemarkFromCoordinates(
             position.latitude, position.longitude);
 
-        // Check if placemarks is not empty
+      
         if (placemarks.isNotEmpty) {
-          // Extract country from the first placemark
+    
           final String country = placemarks.first.country.toString();
 
-          // Convert alarm time to the timezone of the device's location
+          // Converting alarm to the timexone of the current location
           final DateTime alarmTime =
               alarmService.convertTimeOfDayToDateTime(alarm.time);
           final tz.TZDateTime tzDateTime =
               tz.TZDateTime.from(alarmTime, tz.getLocation(country));
 
-          // Schedule the alarm notification
+          
+
+
           const AndroidNotificationDetails androidPlatformChannelSpecifics =
               AndroidNotificationDetails(
             'Alarm_channel',
@@ -67,7 +68,7 @@ class AlarmManager {
             ],
             channelDescription: 'Notification channel',
             icon: '@mipmap/ic_launcher',
-            timeoutAfter: 1000,
+            timeoutAfter: 500,
             sound: RawResourceAndroidNotificationSound('alarm_sound'),
             importance: Importance.max,
             priority: Priority.high,
@@ -91,16 +92,17 @@ class AlarmManager {
         // ignore: empty_catches
       } catch (e) {}
     } else {
-      // Handle the case where permission is denied
-      // You can show a message to the user explaining why location is needed and prompt them to revisit permissions settings if necessary.
+      
     }
   }
+
+  
 
   static Future cancel(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
 
-  // close all the notifications available
+  
   static Future<void> cancelAlarm(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
