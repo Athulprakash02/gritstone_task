@@ -1,6 +1,10 @@
 # gritstone_task
 
-A new Flutter project.
+A Flutter Alarm Application using alarm package.
+
+- Used Hive database to store alarms locally
+- flutter_local_notifications package for alarms notifications.
+- geolocator used to fetch current location of the device. 
 
 ## Getting Started
 
