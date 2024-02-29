@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Alarm'),
+            title: const Text('Alarm'),
             centerTitle: true,
           ),
           body: SizedBox(
@@ -37,6 +37,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         IconButton(
                             onPressed: () {
+                              BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
                                     AlarmEditScreen(alarm: alarm,index: index,),
@@ -57,13 +58,13 @@ class HomeScreen extends StatelessWidget {
                 }),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
+            onPressed: () async{
               BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => AlarmSettingsScreen(),
               ));
             },
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
         );
       },

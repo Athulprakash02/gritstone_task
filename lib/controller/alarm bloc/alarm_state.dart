@@ -4,20 +4,20 @@ part of 'alarm_bloc.dart';
  class AlarmState {
   final TimeOfDay selectedTime;
   // final List<AlarmModel> alarmList;
-
-  AlarmState({required this.selectedTime, });
+final Map<String,dynamic> weatherReport;
+  const AlarmState(this.weatherReport, {required this.selectedTime, });
 }
 
 final class AlarmInitial extends AlarmState {
-  AlarmInitial({required super.selectedTime, });
+  const AlarmInitial(super.weatherReport, {required super.selectedTime, });
 }
 
 class TimeSelectedState extends AlarmState {
-  TimeSelectedState({required super.selectedTime, });
+  const TimeSelectedState(super.weatherReport, {required super.selectedTime, });
 }
 
-class WeatherFetchState extends AlarmState{
-  final Map<String,dynamic> weatherReport;
-  WeatherFetchState(this.weatherReport, {required super.selectedTime});
+// class WeatherFetchState extends AlarmState{
+//   // final Map<String,dynamic> weatherReport;
+//   WeatherFetchState(this.weatherReport, {required super.selectedTime}) : super(null, selectedTime: null);
 
-}
+// }

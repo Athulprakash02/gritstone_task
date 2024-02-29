@@ -6,7 +6,6 @@ import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/view/home/home.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:alarm/alarm.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tzdata;
 
 

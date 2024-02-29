@@ -10,22 +10,22 @@ import 'package:timezone/data/latest_all.dart' as tz;
 
 class AlarmManager {
   static final AlarmService alarmService = AlarmService();
-  static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin
+      _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
+    await _flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(
+          android: AndroidInitializationSettings('@mipmap/ic_launcher')),
+      onDidReceiveBackgroundNotificationResponse: (details) async {
+        _onSelectNotification(details.payload);
+        if (details.actionId == 'cancel_id') {
+          _onSelectNotification(details.payload);
+          // await _flutterLocalNotificationsPlugin.cancel();
+        }
+      },
+    );
 
-            
-    await _flutterLocalNotificationsPlugin.initialize(InitializationSettings(
-            android: AndroidInitializationSettings('@mipmap/ic_launcher')),onDidReceiveBackgroundNotificationResponse: (details) async{
-              if(details.actionId == 'cancel_id'){
-                // await _flutterLocalNotificationsPlugin.cancel();
-                print(details.id);
-              }
-              
-            },);
-
-    
     tz.initializeTimeZones();
   }
 
@@ -39,10 +39,10 @@ class AlarmManager {
         // Fetch device's location
         final Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
-        
+
         // Fetch placemarks
-        final List<Placemark> placemarks =
-            await placemarkFromCoordinates(position.latitude, position.longitude);
+        final List<Placemark> placemarks = await placemarkFromCoordinates(
+            position.latitude, position.longitude);
 
         // Check if placemarks is not empty
         if (placemarks.isNotEmpty) {
@@ -56,11 +56,17 @@ class AlarmManager {
               tz.TZDateTime.from(alarmTime, tz.getLocation(country));
 
           // Schedule the alarm notification
-          final AndroidNotificationDetails androidPlatformChannelSpecifics =
+          const AndroidNotificationDetails androidPlatformChannelSpecifics =
               AndroidNotificationDetails(
             'Alarm_channel',
             'alarm',
-            actions: [AndroidNotificationAction('cancel_id', 'cancel',cancelNotification: true,)],
+            actions: [
+              AndroidNotificationAction(
+                'cancel_id',
+                'cancel',
+                cancelNotification: true,
+              )
+            ],
             channelDescription: 'Notification channel',
             icon: '@mipmap/ic_launcher',
             timeoutAfter: 1000,
@@ -69,7 +75,7 @@ class AlarmManager {
             priority: Priority.high,
           );
 
-          final NotificationDetails platformChannelSpecifics =
+          const NotificationDetails platformChannelSpecifics =
               NotificationDetails(android: androidPlatformChannelSpecifics);
 
           await _flutterLocalNotificationsPlugin.zonedSchedule(
@@ -78,19 +84,16 @@ class AlarmManager {
             'body',
             tzDateTime,
             platformChannelSpecifics,
-            
             androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
             uiLocalNotificationDateInterpretation:
                 UILocalNotificationDateInterpretation.absoluteTime,
             payload: 'payload',
           );
         }
-      } catch (e) {
-        print('Error fetching location or placemark: $e');
-      }
+        // ignore: empty_catches
+      } catch (e) {}
     } else {
       // Handle the case where permission is denied
-      print('Location permission denied');
       // You can show a message to the user explaining why location is needed and prompt them to revisit permissions settings if necessary.
     }
   }
@@ -114,16 +117,9 @@ class AlarmManager {
 
   // Callback function invoked when a notification is selected by the user
   static Future<void> _onSelectNotification(String? payload) async {
+    cancelAlarm(1);
     // Handle notification selection event here
   }
 
   // Callback function invoked when a notification is canceled by the user
-  static Future<void> _onNotificationCanceled(int? id, bool? dismissed) async {
-    if (dismissed ?? false) {
-      await cancelAlarm(id!);
-    }
-  }
-
-  
-
 }

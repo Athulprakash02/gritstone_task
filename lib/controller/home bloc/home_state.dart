@@ -12,7 +12,7 @@ final class HomeInitial extends HomeState {
 }
 
 class HomeLoadedState extends HomeState {
-  HomeLoadedState({required super.alarmList});
+  const HomeLoadedState({required super.alarmList});
   
 }
 

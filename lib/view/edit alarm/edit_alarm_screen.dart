@@ -9,7 +9,9 @@ class AlarmEditScreen extends StatelessWidget {
   final AlarmModel alarm;
   final int index;
 
-  const AlarmEditScreen({Key? key, required this.alarm, required this.index}) : super(key: key);
+  // ignore: use_super_parameters
+  const AlarmEditScreen({Key? key, required this.alarm, required this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,38 +22,53 @@ class AlarmEditScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Alarm'),
+        title: const Text('Edit Alarm'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ListTile(
-              title: Text(
-                'Placename',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                'Cloudy, 34°C / 34°C',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              trailing: Text(
-                '30°C',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+             BlocBuilder<AlarmBloc, AlarmState>(
+              builder: (context, state) {
+                if (state.weatherReport.isEmpty) {
+                  return const ListTile(
+                    title: Text(
+                      'Loading...',
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                  );
+                } else {
+                  return ListTile(
+                    title: Text(
+                      state.weatherReport["location"]['name'],
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(
+                      state.weatherReport["current"]["condition"]["text"],
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    trailing: Text(
+                      '${state.weatherReport['current']["temp_c"].toInt()}°C',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
+              },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(10),
@@ -60,7 +77,7 @@ class AlarmEditScreen extends StatelessWidget {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),
@@ -69,10 +86,9 @@ class AlarmEditScreen extends StatelessWidget {
                 children: [
                   BlocBuilder<AlarmBloc, AlarmState>(
                     builder: (context, state) {
-                      
                       return Text(
                         time.format(context),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 22,
                           color: Colors.white,
                         ),
@@ -80,12 +96,13 @@ class AlarmEditScreen extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit,
                       color: Colors.white,
                     ),
                     onPressed: () async {
                       time = await alarmService.setTime(context, alarm.time);
+                      // ignore: use_build_context_synchronously
                       BlocProvider.of<AlarmBloc>(context)
                           .add(EditTimeEvent(selectedTime: time));
                     },
@@ -93,7 +110,7 @@ class AlarmEditScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: labelController,
               decoration: InputDecoration(
@@ -103,13 +120,11 @@ class AlarmEditScreen extends StatelessWidget {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                final updatedAlarm = AlarmModel(
-                   
-                    label: labelController.text.trim() ?? 'alarm',
-                    time: time);
+                final updatedAlarm =
+                    AlarmModel(label: labelController.text.trim(), time: time);
                 alarmService.updateAlarm(index, updatedAlarm);
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
@@ -118,7 +133,7 @@ class AlarmEditScreen extends StatelessWidget {
                   (route) => false,
                 );
               },
-              child: Text('Save Changes'),
+              child: const Text('Save Changes'),
             ),
           ],
         ),

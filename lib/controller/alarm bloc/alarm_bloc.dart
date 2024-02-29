@@ -1,9 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:gritstone_task/controller/services/weather%20service/weather_service.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
-import 'package:hive/hive.dart';
+// ignore: unnecessary_import
 import 'package:meta/meta.dart';
 
 part 'alarm_event.dart';
@@ -11,13 +13,11 @@ part 'alarm_state.dart';
 
 class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
   AlarmBloc()
-      : super(AlarmInitial(
+      : super(AlarmInitial(weatherData,
           selectedTime: TimeOfDay.now(),
         )) {
     on<EditTimeEvent>((event, emit) {
-      print('object');
-      print(event.selectedTime);
-      return emit(TimeSelectedState(
+      return emit(TimeSelectedState(state.weatherReport,
         selectedTime: event.selectedTime,
       ));
     });
@@ -34,7 +34,7 @@ class AlarmBloc extends Bloc<AlarmEvent, AlarmState> {
     on<FetchWeatherEvent>((event, emit) async {
       final WeatherService weatherService = WeatherService();
       Map<String, dynamic> report = await weatherService.fetchWeatherData();
-      return emit(WeatherFetchState(report, selectedTime: state.selectedTime));
+      return emit(AlarmState(report, selectedTime: state.selectedTime));
     });
   }
 }

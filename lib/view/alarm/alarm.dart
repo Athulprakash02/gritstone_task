@@ -1,12 +1,14 @@
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gritstone_task/controller/alarm%20bloc/alarm_bloc.dart';
-import 'package:gritstone_task/controller/services/weather%20service/weather_service.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
 import 'package:gritstone_task/view/home/home.dart';
 
 class AlarmSettingsScreen extends StatelessWidget {
+  // ignore: use_super_parameters
   AlarmSettingsScreen({Key? key}) : super(key: key);
   TimeOfDay time = TimeOfDay.now();
   final TextEditingController labelController = TextEditingController();
@@ -19,55 +21,65 @@ class AlarmSettingsScreen extends StatelessWidget {
     // weatherService.fetchWeatherData();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: const Text('Settings'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             BlocBuilder<AlarmBloc, AlarmState>(
               builder: (context, state) {
-                if (state is WeatherFetchState) {
-                  return ListTile(
+                if (state.weatherReport.isEmpty) {
+                  return const ListTile(
                     title: Text(
-                      state.weatherReport["location"]['name'],
+                      'Loading...',
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      state.weatherReport["current"]["condition"]["text"],
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    trailing: Text(
-                      '${state.weatherReport['current']["temp_c"].toInt()}°C',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
                       ),
                     ),
                   );
                 } else {
                   return ListTile(
                     title: Text(
-                      'Loading...',
-                      style: TextStyle(
-                        fontSize: 14,
-                        
+                      state.weatherReport["location"]['name'],
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    
+                    subtitle: Text(
+                      state.weatherReport["current"]["condition"]["text"],
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    trailing: Text(
+                      '${state.weatherReport['current']["temp_c"].toInt()}°C',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   );
                 }
+                // } else {
+                //   return ListTile(
+                //     title: Text(
+                //       'Loading...',
+                //       style: TextStyle(
+                //         fontSize: 14,
+
+                //       ),
+                //     ),
+
+                //   );
+                // }
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.blue,
                 borderRadius: BorderRadius.circular(10),
@@ -76,7 +88,7 @@ class AlarmSettingsScreen extends StatelessWidget {
                     color: Colors.grey.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 7,
-                    offset: Offset(0, 1),
+                    offset: const Offset(0, 1),
                   ),
                 ],
               ),
@@ -88,7 +100,7 @@ class AlarmSettingsScreen extends StatelessWidget {
                       String hour = state.selectedTime.format(context);
                       return Text(
                         hour,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 22,
                           color: Colors.white,
                         ),
@@ -96,7 +108,7 @@ class AlarmSettingsScreen extends StatelessWidget {
                     },
                   ),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.edit,
                       color: Colors.white,
                     ),
@@ -105,14 +117,14 @@ class AlarmSettingsScreen extends StatelessWidget {
                           await alarmService.setTime(context, TimeOfDay.now());
                       BlocProvider.of<AlarmBloc>(context)
                           .add(EditTimeEvent(selectedTime: time));
-                      BlocProvider.of<AlarmBloc>(context)
-                          .add(FetchWeatherEvent());
+                      // BlocProvider.of<AlarmBloc>(context)
+                      //     .add(FetchWeatherEvent());
                     },
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             TextField(
               controller: labelController,
               decoration: InputDecoration(
@@ -122,11 +134,11 @@ class AlarmSettingsScreen extends StatelessWidget {
                     OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 AlarmModel alarmDetails = AlarmModel(
-                    label: labelController.text.trim() ?? 'alarm', time: time);
+                    label: labelController.text.trim(), time: time);
                 alarmService.saveAlarm(alarmDetails);
 
                 // BlocProvider.of<AlarmBloc>(context).add(SaveAlarmEvent(
@@ -137,7 +149,7 @@ class AlarmSettingsScreen extends StatelessWidget {
                     ),
                     (route) => false);
               },
-              child: Text('Save Alarm'),
+              child: const Text('Save Alarm'),
             ),
           ],
         ),

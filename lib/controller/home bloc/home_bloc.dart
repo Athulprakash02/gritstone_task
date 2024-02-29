@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:bloc/bloc.dart';
 import 'package:gritstone_task/model/alarm%20model/alarm_model.dart';
 import 'package:gritstone_task/controller/services/alarm%20service/alarm_service.dart';
