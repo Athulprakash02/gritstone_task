@@ -8,7 +8,6 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:alarm/alarm.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -36,6 +35,24 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        theme: ThemeData(
+          elevatedButtonTheme: const ElevatedButtonThemeData(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                      Color.fromARGB(255, 130, 194, 188)),
+                  textStyle: MaterialStatePropertyAll(
+                      TextStyle(color: Colors.white)))),
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.teal,
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.teal,
+            titleTextStyle: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+            centerTitle: true,
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         home: HomeScreen(),
       ),

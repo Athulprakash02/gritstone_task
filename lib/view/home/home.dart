@@ -21,41 +21,55 @@ class HomeScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Alarm'),
-            centerTitle: true,
           ),
           body: SafeArea(
             child: SizedBox(
               width: size.width,
               height: size.height,
               child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: state.alarmList.length,
                   itemBuilder: (context, index) {
                     AlarmModel alarm = state.alarmList[index];
-                    return ListTile(
-                      
-                      title: Text(alarm.time.format(context)),
-                      subtitle: Text(alarm.label),
-                      trailing: Wrap(
-                        children: [
-                          IconButton(
+                    return Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5), 
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: const Offset(0, 3), 
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        title: Text(alarm.time.format(context)),
+                        subtitle: Text(alarm.label),
+                        trailing: Wrap(
+                          children: [
+                            IconButton(
                               onPressed: () {
-                                BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
+                                BlocProvider.of<AlarmBloc>(context)
+                                    .add(FetchWeatherEvent());
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      AlarmEditScreen(alarm: alarm,index: index,),
+                                  builder: (context) => AlarmEditScreen(
+                                    alarm: alarm,
+                                    index: index,
+                                  ),
                                 ));
                               },
                               icon: const Icon(Icons.edit),
-                              color: Colors.blue),
-                          IconButton(
-                            onPressed: () {
-                              deleteAlert(context, index);
-                            },
-                            icon: const Icon(Icons.delete),
-                            color: Colors.red,
-                          ),
-                        ],
+                              color: Colors.blue,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                deleteAlert(context, index);
+                              },
+                              icon: const Icon(Icons.delete),
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }),
@@ -65,7 +79,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton(
-                onPressed: () async{
+                onPressed: () async {
                   BlocProvider.of<AlarmBloc>(context).add(FetchWeatherEvent());
                   Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => AlarmSettingsScreen(),
@@ -89,7 +103,6 @@ class HomeScreen extends StatelessWidget {
           TextButton(
               onPressed: () {
                 alarmService.deleteAlarm(key, context);
-                
 
                 Navigator.of(context).pop(ctx);
               },

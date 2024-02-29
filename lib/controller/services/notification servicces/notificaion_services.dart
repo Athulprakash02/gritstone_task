@@ -23,27 +23,24 @@ class AlarmManager {
     }, onDidReceiveNotificationResponse: (NotificationResponse payload) async {
       await cancelAlarm(1);
     });
-
+    await Permission.location.request();
+    await Permission.notification.request();
     tz.initializeTimeZones();
   }
 
   static Future<void> addAlarm(AlarmModel alarm) async {
-
     final PermissionStatus status = await Permission.location.request();
+    await Permission.notification.request();
 
-  
     if (status.isGranted) {
       try {
         final Position position = await Geolocator.getCurrentPosition(
             desiredAccuracy: LocationAccuracy.high);
 
-        
         final List<Placemark> placemarks = await placemarkFromCoordinates(
             position.latitude, position.longitude);
 
-      
         if (placemarks.isNotEmpty) {
-    
           final String country = placemarks.first.country.toString();
 
           // Converting alarm to the timexone of the current location
@@ -51,9 +48,6 @@ class AlarmManager {
               alarmService.convertTimeOfDayToDateTime(alarm.time);
           final tz.TZDateTime tzDateTime =
               tz.TZDateTime.from(alarmTime, tz.getLocation(country));
-
-          
-
 
           const AndroidNotificationDetails androidPlatformChannelSpecifics =
               AndroidNotificationDetails(
@@ -78,7 +72,7 @@ class AlarmManager {
               NotificationDetails(android: androidPlatformChannelSpecifics);
 
           await _flutterLocalNotificationsPlugin.zonedSchedule(
-             1,
+            1,
             'title',
             'body',
             tzDateTime,
@@ -91,18 +85,13 @@ class AlarmManager {
         }
         // ignore: empty_catches
       } catch (e) {}
-    } else {
-      
-    }
+    } else {}
   }
-
-  
 
   static Future cancel(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }
 
-  
   static Future<void> cancelAlarm(int id) async {
     await _flutterLocalNotificationsPlugin.cancel(id);
   }

@@ -16,8 +16,3 @@ class TimeSelectedState extends AlarmState {
   const TimeSelectedState(super.weatherReport, {required super.selectedTime, });
 }
 
-// class WeatherFetchState extends AlarmState{
-//   // final Map<String,dynamic> weatherReport;
-//   WeatherFetchState(this.weatherReport, {required super.selectedTime}) : super(null, selectedTime: null);
-
-// }
